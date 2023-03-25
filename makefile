@@ -35,10 +35,10 @@ init:
 	python -m pip install -U "nuitka>=1.0.6"
 
 dir:
-	make auto_dir
+	make zip_dir
 
 onefile:
-	make auto_onefile
+	make zip_onefile
 
 clear:
 	$(RMDIR) $(MAINNAME).build
