@@ -6,20 +6,57 @@ MAINNAME := main
 ICON := icon.ico
 
 DIRNAME := $(PJNAME).dist
-FILENAME := $(PJNAME).exe
 MAINFILE := $(MAINNAME).py
 
 ifeq ($(OS),Windows_NT)
 	ICONBASH := --windows-icon-from-ico=$(ICON)
 	RMDIR := rmdir /s /q
+	FILENAME := $(PJNAME).exe
+	RM := del /q
 else
 	RMDIR := rmdir -rf
 #ifeq ($(shell uname),Darwin)
 #	ICONBASH := --macos-app-icon=$(ICON)
 #else
 	ICONBASH := --linux-icon=$(ICON)
+	FILENAME := $(PJNAME)
+	RM := rm -f
 #endif
 endif
+
+
+## 其他编译选项区
+all:
+	make onefile
+	make dir
+	make clear
+
+init:
+	python -m pip install -U "nuitka>=1.0.6"
+
+dir:
+	make auto_dir
+
+onefile:
+	make auto_onefile
+
+clear:
+	$(RMDIR) $(MAINNAME).build
+	$(RMDIR) $(MAINNAME).dist
+	$(RMDIR) $(MAINNAME).onefile-build
+#mv -r $(DIRNAME)/$(MAINNAME).dist ./$(PJNAME)
+#$(RMDIR) $(DIRNAME)
+	cd $(DIRNAME)
+	$(RMDIR) $(MAINNAME).build
+
+clean:
+	$(RMDIR) $(DIRNAME)
+	$(RM) $(FILENAME)
+
+rm:
+	make clear
+	make clean
+
 ## 编译选项区
 # 静态打包编译
 static_onefile:
@@ -48,29 +85,3 @@ vm_onefile:
 
 vm_dir:
 	$(NUITKA) --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
-
-
-## 其他编译选项区
-
-init:
-	python -m pip install -U "nuitka>=1.0.6"
-
-dir:
-	make auto_dir
-
-onefile:
-	make auto_onefile
-
-clear:
-	$(RMDIR) $(MAINNAME).build
-	$(RMDIR) $(MAINNAME).dist
-	$(RMDIR) $(MAINNAME).onefile-build
-#mv -r $(DIRNAME)/$(MAINNAME).dist ./$(PJNAME)
-#$(RMDIR) $(DIRNAME)
-	$(RMDIR) $(DIRNAME)/$(MAINNAME).build
-
-all:
-	make init
-	make onefile
-	make dir
-	make clear
