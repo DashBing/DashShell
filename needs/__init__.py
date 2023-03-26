@@ -16,6 +16,8 @@ def main():
     del tmpcwd
     pkg_theads = {}
     theads = []
+    if sys.platform == "win32":
+        os.system("title %s"%project_name)
     while True:
         inp = input("%s>"%os.getcwd())
         if inp != "":
