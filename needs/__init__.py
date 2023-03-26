@@ -3,9 +3,10 @@ import sys
 from json import dumps as jen
 from json import dumps as jde
 from .data import errormsg,helps,preprint,version,copyright,project_name
-from .commands import init_pkgindex,about
+from .commands import init_pkgindex,about,ins_pkg,get_server_list,get_pkg_index
 import threading
 import ctypes
+import requests as rq
 
 def main():
     print(preprint)
@@ -42,11 +43,51 @@ def main():
                         print(errormsg%("未找到相关目录：",tmp,"请检查目录名称是否正确。"))
                 case "包":
                     match inpl[1]:
+                        case "安装":
+                            tmp = inp[5:len(inp)]
+                            sl = get_server_list()
+                            for i in range(len(sl)):
+                                print("[%s] %s"%(i,sl[i]))
+                            l = input("请选择其中一个源进行下载（默认为第一个）:\n?.>")
+                            try:
+                                l = int(l)
+                            except:
+                                l = 0
+                            syns = l
+                            s = sl[l]
+                            del sl,l
+                            try:
+                                pl = get_pkg_index(s)
+                            except rq.ReadTimeout:
+                                print(errormsg%("连接超时。",s,"请更换源或检查网络连接。"))
+                            else:
+                                try:
+                                    pl = pl[tmp]
+                                except:
+                                    del s,syns
+                                    print(errormsg%("错误，以下名称的软件包未找到：",tmp,"请检查是否输入正确！"))
+                                else:
+                                    l = []
+                                    for i in list(pl.keys()):
+                                        l.append(i)
+                                    for i in range(len(l)):
+                                        print("[%s] %s"%(i,l[i]))
+                                    ttmp = input("请选择其中一个版本进行下载（默认为第一个）:\n?.>")
+                                    try:
+                                        ttmp = int(ttmp)
+                                    except:
+                                       ttmp = 0
+                                    ttmp = l[ttmp]
+                                    versionp = ttmp
+                                    del l,ttmp,s
+                                    ins_pkg(name=tmp,versionp=versionp,syns=syns)
                         case "注册":
                             pass
                         case "启动":
                             pass
                         case "信息":
+                            pass
+                        case "列表":
                             pass
                         case "关闭":
                             pass

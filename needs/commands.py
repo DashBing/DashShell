@@ -1,8 +1,9 @@
 import os
 from json import dumps as jen
-from json import dumps as jde
+from json import loads as jde
 import ctypes
-from .data import project_name
+from .data import project_name,errormsg
+import requests as rq
 
 def listtostr(data):         # 列表连接文字
     s = ""
@@ -53,7 +54,7 @@ def init_pkgindex():
             pass
     except:
         with open("./.%s/pkgindex.json"%project_name,"w") as f:
-            f.write(jen({}))
+            f.write(jen({"server":["https://raw.githubusercontent.com/DashBing/dspi/master/%s"],"pkgindex":{},"cmds":{}}))
 
 def getmodulehandle(modulename):
     user32 = ctypes.CDLL("Kernel32.dll")
@@ -66,3 +67,42 @@ def loadicon(instance,ipiconname):
 def about(title="Test",author="Test",hicon=loadicon(getmodulehandle(chr(0)),129)):
     user32 = ctypes.CDLL("shell32.dll")
     user32.ShellAboutA(0,bytes(title,"gbk"),bytes(author,"gbk"),hicon)
+
+def get_server_list():
+    init_pkgindex()
+    with open("./.%s/pkgindex.json"%project_name,"r") as f:
+        l = f.read()
+        l = jde(l)["server"]
+    return(l)
+
+def get_pkg_index(server):
+    pl = rq.get(server%"index.json")
+    pl = pl.content.decode("utf-8")
+    pl = jde(pl)
+    return(pl)
+
+def get_server(syns):
+    l = get_server_list()
+    try:
+        l = l[syns]
+    except:
+        l = l[0]
+    return(l)
+
+def ins_pkg(name,versionp,syns):
+    server = get_server(syns)
+    pl = get_pkg_index(server)
+    try:
+        fn = pl[name]
+    except:
+        print(errormsg%("错误，以下名称的软件包未找到：",name,"请检查是否输入正确！"))
+    else:
+        try:
+            fn = fn[versionp]
+        except:
+            fn = fn[list(fn.keys())[0]]
+        fr = rq.get(server%fn).content
+        init_pkgindex()
+        with open("./.%s/%s"%(project_name,fn),"wb") as f:
+            f.write(fr)
+        print("[%s] 安装成功。"%name)

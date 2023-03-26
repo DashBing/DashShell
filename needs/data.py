@@ -1,8 +1,8 @@
 author = "DashBing(大师)"
 copyright = "(c) %s 保留所有权利"%author
 version_class = "Alpha"
-resource_code = "1"
-version_code = "3.0.0"
+resource_code = "2"
+version_code = "3.2.5"
 project_name = "DashShell"
 if version_class == "GM":
     version = "%s v%s %s"%(project_name,version_code,version_class)
@@ -22,6 +22,7 @@ helps = """[帮助]
 进入 [目录路径]\t#进入目录
     cd\t#简化版本 方法同上
 包 <命令> [参数]\t#管理程序包
+    安装 [包名]\t#从软件包仓库下载一个包并注册
     注册 [包文件名]\t#注册一个包
     启动 [包名]\t#启动一个包
     信息 [包名]\t#查看一个包的详细信息
