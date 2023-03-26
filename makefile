@@ -4,6 +4,7 @@ NEEDDIR := needs
 NUITKA := nuitka
 MAINNAME := main
 ICON := icon.ico
+COMPILE := --clang
 
 DIRNAME := $(PJNAME).dist
 MAINFILE := $(MAINNAME).py
@@ -60,28 +61,28 @@ rm:
 ## 编译选项区
 # 静态打包编译
 static_onefile:
-	$(NUITKA) --standalone --follow-imports --onefile --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) --standalone $(COMPILE) --follow-imports --onefile --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
 
 static_dir:
-	$(NUITKA) --standalone --follow-imports --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) --standalone $(COMPILE) --follow-imports --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
 
 # 自动打包编译
 auto_onefile:
-	$(NUITKA) --standalone --onefile --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) --standalone $(COMPILE) --onefile --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
 
 auto_dir:
-	$(NUITKA) --standalone --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) --standalone $(COMPILE) --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
 
 # 动态打包编译
 zip_onefile:
-	$(NUITKA) --standalone --onefile --nofollow-imports --follow-import-to=$(NEEDDIR) --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) --standalone $(COMPILE) --onefile --nofollow-imports --follow-import-to=$(NEEDDIR) --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
 
 zip_dir:
-	$(NUITKA) --standalone --nofollow-imports --follow-import-to=$(NEEDDIR) --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) --standalone $(COMPILE) --nofollow-imports --follow-import-to=$(NEEDDIR) --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
 
 # 依赖Python运行时的编译
 vm_onefile:
-	$(NUITKA) --onefile --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) --onefile $(COMPILE) --output-filename="$(FILENAME)" $(ICONBASH) $(MAINFILE)
 
 vm_dir:
-	$(NUITKA) --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
+	$(NUITKA) $(COMPILE) --output-filename="$(FILENAME)" --output-dir="$(DIRNAME)" $(ICONBASH) $(MAINFILE)
