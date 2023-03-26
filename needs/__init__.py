@@ -41,9 +41,10 @@ def main():
                         except:
                             pass
                         print(errormsg%("未找到相关目录：",tmp,"请检查目录名称是否正确。"))
-                case "包":
+                case "包" if len(inpl) >= 2:
                     match inpl[1]:
                         case "安装":
+                            cwd = os.getcwd()
                             tmp = inp[5:len(inp)]
                             sl = get_server_list()
                             for i in range(len(sl)):
@@ -81,6 +82,8 @@ def main():
                                     versionp = ttmp
                                     del l,ttmp,s
                                     ins_pkg(name=tmp,versionp=versionp,syns=syns)
+                            os.chdir(cwd)
+                            del cwd
                         case "注册":
                             pass
                         case "启动":
@@ -95,6 +98,8 @@ def main():
                             pass
                         case _:
                             print(errormsg%("“包”指令找不到以下参数：",inpl[1],"请检查您是否输入正确。"))
+                case "包":
+                    print(errormsg%("意外地：",inp,"“包”命令必须至少有一个参数。"))
                 case "帮助":
                     if inp == "帮助":
                         print(helps)

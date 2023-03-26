@@ -1,8 +1,8 @@
 author = "DashBing(大师)"
 copyright = "(c) %s 保留所有权利"%author
 version_class = "Alpha"
-resource_code = "2"
-version_code = "3.2.5"
+resource_code = "1"
+version_code = "3.2.6"
 project_name = "DashShell"
 if version_class == "GM":
     version = "%s v%s %s"%(project_name,version_code,version_class)
