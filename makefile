@@ -25,7 +25,7 @@ endif
 
 
 ## 其他编译选项区
-all:
+build:
 	make onefile
 	make dir
 #make clear
